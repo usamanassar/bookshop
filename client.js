@@ -1,30 +1,50 @@
+const express = require("express");
 const axios = require("axios");
+const router = express.Router();
 
-async function getAllBooks() {
-  const res = await axios.get("http://localhost:3000/books");
-  console.log("All Books:", res.data);
-}
+// Test route to confirm it works
+router.get("/", (req, res) => {
+  res.send("Client API is working!");
+});
 
-function getBookByISBN(isbn) {
-  axios.get(`http://localhost:3000/books/isbn/${isbn}`)
-    .then(res => console.log("Book by ISBN:", res.data))
-    .catch(err => console.error("Error:", err.message));
-}
+// Example: Get all books (async/await)
+router.get("/books", async (req, res) => {
+  try {
+    const response = await axios.get("http://localhost:5000/books");
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
-async function getBookByAuthor(author) {
-  const res = await axios.get(`http://localhost:3000/books/author/${author}`);
-  console.log("Books by Author:", res.data);
-}
+// Example: Get book by ISBN
+router.get("/isbn/:isbn", async (req, res) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/books/isbn/${req.params.isbn}`);
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
-async function getBookByTitle(title) {
-  const res = await axios.get(`http://localhost:3000/books/title/${title}`);
-  console.log("Books by Title:", res.data);
-}
+// Example: Get book by author
+router.get("/author/:author", async (req, res) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/books/author/${req.params.author}`);
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
+// Example: Get book by title
+router.get("/title/:title", async (req, res) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/books/title/${req.params.title}`);
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
-(async () => {
-  await getAllBooks();
-  getBookByISBN("1111");
-  await getBookByAuthor("George Orwell");
-  await getBookByTitle("The Hobbit");
-})();
+module.exports = router;
