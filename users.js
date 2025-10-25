@@ -1,11 +1,12 @@
+const jwt = require("jsonwebtoken");
 let users = [];
 
-function isValid(username) {
-  return users.some(u => u.username === username);
-}
+const isValid = (username) => {
+  return users.some(user => user.username === username);
+};
 
-function authenticatedUser(username, password) {
-  return users.some(u => u.username === username && u.password === password);
-}
+const authenticatedUser = (username, password) => {
+  return users.some(user => user.username === username && user.password === password);
+};
 
 module.exports = { users, isValid, authenticatedUser };
