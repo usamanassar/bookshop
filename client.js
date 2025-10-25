@@ -1,50 +1,71 @@
-const express = require("express");
 const axios = require("axios");
-const router = express.Router();
 
-// Test route to confirm it works
-router.get("/", (req, res) => {
-  res.send("Client API is working!");
-});
+// 1️⃣ Get all books
+function getAllBooks() {
+  axios.get("http://localhost:3000/books")
+    .then(res => console.log("All Books:", res.data))
+    .catch(err => console.error(err.message));
+}
 
-// Example: Get all books (async/await)
-router.get("/books", async (req, res) => {
-  try {
-    const response = await axios.get("http://localhost:5000/books");
-    res.json(response.data);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
+// 2️⃣ Get book by ISBN
+function getBookByISBN(isbn) {
+  axios.get(`http://localhost:3000/books/${isbn}`)
+    .then(res => console.log(`Book by ISBN ${isbn}:`, res.data))
+    .catch(err => console.error(err.message));
+}
 
-// Example: Get book by ISBN
-router.get("/isbn/:isbn", async (req, res) => {
-  try {
-    const response = await axios.get(`http://localhost:5000/books/isbn/${req.params.isbn}`);
-    res.json(response.data);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
+// 3️⃣ Get books by Author
+function getBooksByAuthor(author) {
+  axios.get(`http://localhost:3000/books/author/${author}`)
+    .then(res => console.log(`Books by Author "${author}":`, res.data))
+    .catch(err => console.error(err.message));
+}
 
-// Example: Get book by author
-router.get("/author/:author", async (req, res) => {
-  try {
-    const response = await axios.get(`http://localhost:5000/books/author/${req.params.author}`);
-    res.json(response.data);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
+// 4️⃣ Get books by Title
+function getBooksByTitle(title) {
+  axios.get(`http://localhost:3000/books/title/${title}`)
+    .then(res => console.log(`Books with Title "${title}":`, res.data))
+    .catch(err => console.error(err.message));
+}
 
-// Example: Get book by title
-router.get("/title/:title", async (req, res) => {
-  try {
-    const response = await axios.get(`http://localhost:5000/books/title/${req.params.title}`);
-    res.json(response.data);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
+// 5️⃣ Get all reviews for a book
+function getReviews(isbn) {
+  axios.get(`http://localhost:3000/books/reviews/${isbn}`)
+    .then(res => console.log(`Reviews for ISBN "${isbn}":`, res.data))
+    .catch(err => console.error(err.message));
+}
 
-module.exports = router;
+// 6️⃣ Add review
+function addReview(isbn, username, review) {
+  axios.post(`http://localhost:3000/books/auth/review/${isbn}`, { username, review })
+    .then(res => console.log(res.data))
+    .catch(err => console.error(err.message));
+}
+
+// 7️⃣ Update review
+function updateReview(isbn, username, review) {
+  axios.put(`http://localhost:3000/books/auth/review/${isbn}`, { username, review })
+    .then(res => console.log(res.data))
+    .catch(err => console.error(err.message));
+}
+
+// 8️⃣ Delete review
+function deleteReview(isbn, username) {
+  axios.delete(`http://localhost:3000/books/auth/review/${isbn}/${username}`)
+    .then(res => console.log(res.data))
+    .catch(err => console.error(err.message));
+}
+
+// ----------------------------
+// Example calls
+// ----------------------------
+getAllBooks();
+getBookByISBN("12345");
+getBooksByAuthor("Harper Lee");
+getBooksByTitle("The Great Gatsby");
+getReviews("12345");
+
+// Example: add/update/delete review
+// addReview("12345", "user1", "Amazing book!");
+// updateReview("12345", "user1", "Updated review text!");
+// deleteReview("12345", "user1");
